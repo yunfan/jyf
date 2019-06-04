@@ -17,10 +17,19 @@ Plugin 'vim-airline/vim-airline'
 
 Plugin 'altercation/vim-colors-solarized'
 
-Plugin 'shougo/neocomplete.vim'
+Plugin 'roxma/nvim-yarp'
+
+Plugin 'roxma/vim-hug-neovim-rpc'
+
+Plugin 'shougo/deoplete.nvim'
 let g:deoplete#enable_at_startup = 1
 
-Plugin 'hhatto/autopep8'
+Plugin 'nvie/vim-flake8'
+autocmd FileType python map <buffer> <F3> :call flake8#Flake8()<CR>
+
+Plugin 'eslint/eslint'
+Plugin 'prettier/prettier-eslint-cli'
+autocmd FileType javascript set formatprg=prettier-eslint\ --stdin\ 2>/dev/null
 
 Plugin 'easymotion/vim-easymotion'
 map  / <Plug>(easymotion-sn)
@@ -31,6 +40,7 @@ call vundle#end()
 syntax on
 set nu
 set rnu
+set paste
 
 set cursorcolumn
 set cursorline
