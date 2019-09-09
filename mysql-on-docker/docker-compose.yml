@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+    mysql:
+        image: mysql:5.6
+        restart: always
+        working_dir: /docker-entrypoint-initdb.d
+        environment:
+            MYSQL_ROOT_PASSWORD: 123456
+            MYSQL_DATABASE: backend
+        command: --default-authentication-plugin=mysql_native_password --max-connections=200 --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+        ports:
+            - 0.0.0.0:3306:3306
+        volumes:
+            - ./mysql/data:/var/lib/mysql
+            - ./mysql/conf:/etc/mysql/conf.d
+            - ./mysql/init:/docker-entrypoint-initdb.d:rw

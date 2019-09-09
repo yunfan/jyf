@@ -1,0 +1,50 @@
+#!/bin/sh
+
+NAME="test"
+PASS="123456"
+
+CWD=$(pwd)
+case $1 in
+  deploy)
+    mkdir -p "$CWD/mysql/data"
+    cd "$CWD"
+    docker stack deploy --compose-file docker-compose.yml $NAME
+  ;;
+
+  purge)
+    docker stack rm $NAME
+    rm -rf "$CWD/mysql/data"
+    while :
+    do
+      leftcount=$(docker ps | grep "${NAME}_" | wc -l)
+      if [ $leftcount -eq 0 ]
+      then
+        break
+      fi
+      sleep 1
+    done
+  ;;
+
+  log_mysql)
+    docker service logs -f "${NAME}_mysql"
+  ;;
+
+  service)
+    docker service ls
+  ;;
+
+  mysql)
+    container=$(docker ps | grep "${NAME}_mysql" | cut -f1 -d' ')
+    docker exec -it -e LC_ALL=C.UTF-8 $container mysql -uroot -p"${PASS}"
+  ;;
+
+  shell_mysql)
+    container=$(docker ps | grep "${NAME}_mysql" | cut -f1 -d' ')
+    docker exec -it -e LC_ALL=C.UTF-8 $container bash
+  ;;
+
+  *)
+    echo "Usage:\n$0 deploy|purge|service|log_mysql|mysql|shell_mysql"
+  ;;
+esac
+
